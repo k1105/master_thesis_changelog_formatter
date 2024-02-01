@@ -1,6 +1,7 @@
 import csv
 import sys
 import os
+import datetime
 
 def convert_csv_to_text(csv_file_path):
     # CSVファイルを開いてデータを読み込む
@@ -43,8 +44,23 @@ def main():
     # CSVファイルをテキストに変換
     text = convert_csv_to_text(csv_file_path)
 
-    # 出力ファイルのパスを生成 (CSVファイルと同じ名前で.txt拡張子)
-    output_file_path = os.path.splitext(csv_file_path)[0] + '.txt'
+        # 現在のタイムスタンプを取得 (例: 20240202_123456)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # 出力ファイルのパスを生成
+    # CSVファイル名の先頭にタイムスタンプを付与
+    output_file_base = os.path.splitext(os.path.basename(csv_file_path))[0]
+
+    output_dir = 'out'
+    if not os.path.exists(output_dir):
+        try:
+            os.makedirs(output_dir)
+        except OSError as e:
+            print(f"エラー: ディレクトリ '{output_dir}' の作成に失敗しました。")
+            sys.exit(1)
+
+    # 出力ファイルのパスを生成
+    output_file_path = os.path.join(output_dir, f"{timestamp}_{output_file_base}.txt")
 
     # テキストファイルに書き込み
     with open(output_file_path, mode='w', encoding='utf-8') as file:
